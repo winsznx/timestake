@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-labelledby="title desc">
+  <title id="title">StreakBit logo</title>
+  <desc id="desc">A layered flame shape representing habit streak momentum.</desc>
+  <defs>
+    <linearGradient id="outer" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="50%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="240" rx="52" fill="#0f0f0f"/>
+  <path d="M122 28c12 32 44 44 44 84 0 34-19 62-46 76 14-15 21-31 21-48 0-22-14-37-31-50 2 11-1 22-8 32-8 11-17 17-17 37 0 13 5 23 15 31-28-11-47-38-47-72 0-43 27-62 69-90z" fill="url(#outer)"/>
+  <path d="M120 82c11 15 25 24 25 46 0 19-11 36-27 45 7-10 10-18 10-28 0-12-7-21-17-28 1 7-1 13-6 19-5 7-11 11-11 23 0 7 3 13 8 18-16-7-27-23-27-42 0-24 15-36 45-53z" fill="#f8fafc" opacity="0.92"/>
+</svg>
