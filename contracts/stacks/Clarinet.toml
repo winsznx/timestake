@@ -1,14 +1,34 @@
 [project]
-name = "timestake"
-description = "Decentralized username registry on Stacks"
+name = "streakbit"
+description = "Daily habit and streak protocol on Stacks"
 authors = ["winsznx"]
 telemetry = false
 cache_dir = ".cache"
 requirements = []
 boot_contracts = []
 
-[contracts.LUtimestake]
-path = "contracts/LUtimestake.clar"
+[contracts.habit-registry]
+path = "contracts/habit-registry.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.check-in-manager]
+path = "contracts/check-in-manager.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.reward-distributor]
+path = "contracts/reward-distributor.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.penalty-handler]
+path = "contracts/penalty-handler.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.leaderboard]
+path = "contracts/leaderboard.clar"
 clarity_version = 2
 epoch = 2.4
 
