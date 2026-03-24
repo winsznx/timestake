@@ -1,15 +1,32 @@
-
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+
+import { Footer } from '@/components/layout/Footer';
+import { Header } from '@/components/layout/Header';
+import { APP_DESCRIPTION, APP_NAME } from '@/lib/constants';
+
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const metadataBase = new URL(
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+);
 
 export const metadata: Metadata = {
-  title: 'Timestake | Decentralized App',
-  description: 'Secure and transparent blockchain application powered by timestake',
+  title: `${APP_NAME} | Build habits. Earn on-chain.`,
+  description: APP_DESCRIPTION,
+  metadataBase,
   icons: {
-    icon: '/favicon.ico',
+    icon: '/favicon.svg',
+  },
+  openGraph: {
+    title: `${APP_NAME} | Build habits. Earn on-chain.`,
+    description: APP_DESCRIPTION,
+    images: ['/og-image.svg'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${APP_NAME} | Build habits. Earn on-chain.`,
+    description: APP_DESCRIPTION,
+    images: ['/og-image.svg'],
   },
 };
 
@@ -20,7 +37,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="antialiased">
-      <body className={inter.className}>{children}</body>
+      <body>
+        <Header />
+        <div className="min-h-[calc(100vh-160px)]">{children}</div>
+        <Footer />
+      </body>
     </html>
   );
 }
