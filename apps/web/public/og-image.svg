@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">StreakBit social card</title>
+  <desc id="desc">A dark StreakBit social card with the Build habits. Earn on-chain. tagline.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090910"/>
+      <stop offset="50%" stop-color="#17172b"/>
+      <stop offset="100%" stop-color="#0f0f0f"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="20%" cy="20%" r="55%">
+      <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.52"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="80%" cy="28%" r="35%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow1)"/>
+  <rect width="1200" height="630" fill="url(#glow2)"/>
+  <rect x="88" y="88" width="1024" height="454" rx="38" fill="rgba(26,26,46,0.82)" stroke="#334155"/>
+  <text x="140" y="210" fill="#a78bfa" font-family="Inter, sans-serif" font-size="28" letter-spacing="8">STREAKBIT</text>
+  <text x="140" y="315" fill="#f8fafc" font-family="Inter, sans-serif" font-size="74" font-weight="700">Build habits.</text>
+  <text x="140" y="395" fill="#f8fafc" font-family="Inter, sans-serif" font-size="74" font-weight="700">Earn on-chain.</text>
+  <text x="140" y="470" fill="#94a3b8" font-family="Inter, sans-serif" font-size="30">Daily streaks, reward multipliers, and leaderboard momentum on Stacks.</text>
+</svg>
