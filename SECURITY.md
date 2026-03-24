@@ -8,7 +8,7 @@
 
 ## Reporting a Vulnerability
 
-We take the security of TimeStake seriously. If you discover a security vulnerability, please follow these steps:
+We take the security of StreakBit seriously. If you discover a vulnerability, please follow these steps:
 
 1. **Do Not** disclose the vulnerability publicly until it has been addressed
 2. Email details to: timjosh507@gmail.com
@@ -27,14 +27,14 @@ We take the security of TimeStake seriously. If you discover a security vulnerab
 ## Security Best Practices
 
 ### Smart Contracts
-- All contracts are immutable after deployment
-- Use only audited wallet providers (Reown, Stacks Connect)
+- Verify the deployed contract address before interacting with any StreakBit function
+- Treat simulated demo state in the web app as non-authoritative until on-chain reads are wired in
 - Never share private keys or seed phrases
-- Verify contract addresses before interaction
+- Run `clarinet check` before proposing contract changes
 
 ### Frontend
 - Always verify transaction details before signing
-- Check network before submitting transactions
+- Confirm the network and contract address before submitting a transaction
 - Use hardware wallets for high-value operations
 
 ## Disclosure Policy
@@ -48,7 +48,7 @@ Once a vulnerability is fixed:
 
 - Smart contracts cannot be upgraded after deployment
 - Users are responsible for their own private key security
-- Transaction fees are paid by users
+- Demo data shown in the current frontend is not live chain state
 
 ## Contact
 
