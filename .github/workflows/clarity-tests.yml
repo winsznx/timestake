@@ -1,0 +1,13 @@
+name: Clarity Validation
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: stacks-network/clarinet-action@v1
+      - run: cd contracts/stacks && clarinet check
