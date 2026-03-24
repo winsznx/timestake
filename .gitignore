@@ -36,6 +36,8 @@ cache/
 out/
 lib/
 broadcast/
+!apps/web/src/lib/
+!apps/web/src/lib/**
 
 # Clarinet
 .cache/
