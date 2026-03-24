@@ -1,0 +1,8 @@
+{
+  "name": "@streakbit/stacks-contracts",
+  "private": true,
+  "scripts": {
+    "check": "clarinet check",
+    "test": "clarinet check"
+  }
+}
