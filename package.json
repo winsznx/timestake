@@ -1,23 +1,25 @@
 {
-  "name": "timestake",
+  "name": "streakbit",
   "version": "1.0.0",
   "private": true,
-  "description": "Time-weighted staking protocol with dynamic reward calculation on Base and Stacks blockchains.",
+  "description": "Daily habit and streak protocol on Stacks.",
   "scripts": {
-    "dev": "pnpm --filter web dev",
-    "build": "pnpm --filter web build",
-    "test": "pnpm --filter base-contracts test && pnpm --filter stacks-contracts test",
-    "lint": "pnpm --filter web lint"
+    "dev": "pnpm --filter @streakbit/web dev",
+    "build": "pnpm --filter @streakbit/web build",
+    "lint": "pnpm --filter @streakbit/web lint",
+    "type-check": "pnpm --filter @streakbit/web exec tsc --noEmit",
+    "test": "pnpm --filter @streakbit/stacks-contracts test"
   },
   "keywords": [
-    "blockchain",
-    "base",
     "stacks",
-    "registry",
-    "web3"
+    "clarity",
+    "habits",
+    "streaks",
+    "nextjs"
   ],
   "author": "winsznx",
   "license": "MIT",
+  "packageManager": "pnpm@10.17.1",
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
