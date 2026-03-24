@@ -28,6 +28,10 @@ export const metadata: Metadata = {
     description: APP_DESCRIPTION,
     images: ['/og-image.svg'],
   },
+  other: {
+    'talentapp:project_verification':
+      '2fb7ab8a0f5b2b3a422c26a2dce2400ca8623a2888179a057354e478b7d681c9aaf37a6e6d5b67f05c784591f9f4e766f79263b57f2950719dcb31f27a2e30c9',
+  },
 };
 
 export default function RootLayout({
