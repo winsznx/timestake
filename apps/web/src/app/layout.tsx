@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { APP_DESCRIPTION, APP_NAME } from '@/lib/constants';
+import { ConnectProvider } from '@/components/wallet/ConnectProvider';
 
 import './globals.css';
 
@@ -42,9 +43,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="antialiased">
       <body>
-        <Header />
-        <div className="min-h-[calc(100vh-160px)]">{children}</div>
-        <Footer />
+        <ConnectProvider>
+          <Header />
+          <div className="min-h-[calc(100vh-160px)]">{children}</div>
+          <Footer />
+        </ConnectProvider>
       </body>
     </html>
   );
