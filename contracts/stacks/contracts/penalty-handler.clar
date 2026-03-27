@@ -1,3 +1,4 @@
+;; clarity-version: 4
 ;; penalty-handler.clar
 ;; Handles penalties for missed check-ins
 
