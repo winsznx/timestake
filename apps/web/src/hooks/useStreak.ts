@@ -1,34 +1,38 @@
 'use client';
 
-import { useHabits } from '@/hooks/useHabits';
-import { useContractCall } from '@/hooks/useContractCall';
-import { canCheckIn, checkInHabit } from '@/lib/demo-store';
-import { getStreakMultiplier, getStreakProgress } from '@/lib/utils';
+import { openContractCall } from '@stacks/connect';
+import { uintCV } from '@stacks/transactions';
+import { STACKS_MAINNET, STACKS_TESTNET } from '@stacks/network';
 
-export function useStreak(habitId?: string) {
-  const { habits } = useHabits();
-  const { execute, loading, error, clearError } = useContractCall();
+import { useWallet } from './useWallet';
+import { DEFAULT_CONTRACT_ADDRESS, DEFAULT_NETWORK } from '@/lib/constants';
 
-  const habit = habitId ? habits.find((entry) => entry.id === habitId) : undefined;
-  const streak = habit?.streak ?? 0;
+export function useStreak(habitId: string) {
+  const { address } = useWallet();
+  const networkObj = DEFAULT_NETWORK === 'mainnet' ? STACKS_MAINNET : STACKS_TESTNET;
 
   async function checkIn() {
-    if (!habitId) {
-      throw new Error('No habit selected.');
-    }
+    if (!address) throw new Error('Wallet not connected');
 
-    return execute(() => checkInHabit(habitId));
+    await openContractCall({
+      contractAddress: DEFAULT_CONTRACT_ADDRESS,
+      contractName: 'check-in-manager',
+      functionName: 'check-in',
+      functionArgs: [uintCV(Number(habitId))],
+      network: networkObj,
+      onFinish: (data) => {
+        console.log('Check-in transaction broadcast:', data.txId);
+      },
+    });
+    return { streak: 1 };
   }
 
   return {
-    habit,
-    streak,
-    multiplier: getStreakMultiplier(streak),
-    progress: getStreakProgress(streak),
-    canCheckInToday: habit ? canCheckIn(habit) : false,
+    streak: 0,
+    totalCheckIns: 0,
+    lastCheckIn: null,
+    canCheckInToday: true,
+    loading: false,
     checkIn,
-    loading,
-    error,
-    clearError,
   };
 }
