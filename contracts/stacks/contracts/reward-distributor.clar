@@ -1,3 +1,4 @@
+;; clarity-version: 4
 ;; reward-distributor.clar
 ;; Distributes rewards based on streak multipliers
 
@@ -45,17 +46,19 @@
 (define-public (claim-reward (habit-id uint))
   (let (
       (reward-data
-        (unwrap! (map-get? rewards { user: tx-sender, habit-id: habit-id }) ERR-NO-REWARD)
+        (default-to
+          { claimable: u0, total-claimed: u0, last-claim: u0 }
+          (map-get? rewards { user: tx-sender, habit-id: habit-id })
+        )
       )
       (amount (get claimable reward-data))
     )
-    (asserts! (> amount u0) ERR-NO-REWARD)
     (map-set rewards
       { user: tx-sender, habit-id: habit-id }
       {
         claimable: u0,
         total-claimed: (+ (get total-claimed reward-data) amount),
-        last-claim: block-height
+        last-claim: burn-block-height
       }
     )
     (ok amount)
