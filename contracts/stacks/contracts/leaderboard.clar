@@ -1,3 +1,4 @@
+;; clarity-version: 4
 ;; leaderboard.clar
 ;; Tracks top users by score
 
@@ -20,7 +21,7 @@
     )
     (map-set scores
       { user: user }
-      { score: new-score, rank: u0, last-updated: block-height }
+      { score: new-score, rank: u0, last-updated: burn-block-height }
     )
     (if (> new-score (var-get top-score))
       (var-set top-score new-score)
