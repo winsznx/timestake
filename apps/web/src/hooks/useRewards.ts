@@ -1,31 +1,37 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { openContractCall } from '@stacks/connect';
+import { uintCV } from '@stacks/transactions';
+import { STACKS_MAINNET, STACKS_TESTNET } from '@stacks/network';
 
-import { claimReward, getRewards, readDemoState, subscribeToDemoState } from '@/lib/demo-store';
-import type { DemoState } from '@/lib/demo-store';
-import { useContractCall } from '@/hooks/useContractCall';
+import { useWallet } from './useWallet';
+import { DEFAULT_CONTRACT_ADDRESS, DEFAULT_NETWORK } from '@/lib/constants';
 
-export function useRewards() {
-  const [state, setState] = useState<DemoState>(() => readDemoState());
-  const { execute, loading, error, clearError } = useContractCall();
+export function useRewards(habitId?: string) {
+  const { address } = useWallet();
+  const networkObj = DEFAULT_NETWORK === 'mainnet' ? STACKS_MAINNET : STACKS_TESTNET;
 
-  useEffect(() => subscribeToDemoState(setState), []);
+  async function claimReward() {
+    if (!address) throw new Error('Wallet not connected');
+    if (!habitId) throw new Error('No habit specified');
 
-  const rewards = getRewards(state.habits);
-  const totalClaimable = rewards.reduce((total, reward) => total + reward.claimable, 0);
-
-  async function claim(habitId: string) {
-    return execute(() => claimReward(habitId));
+    await openContractCall({
+      contractAddress: DEFAULT_CONTRACT_ADDRESS,
+      contractName: 'reward-distributor',
+      functionName: 'claim-reward',
+      functionArgs: [uintCV(Number(habitId))],
+      network: networkObj,
+      onFinish: (data) => {
+        console.log('Reward claim broadcast:', data.txId);
+      },
+    });
   }
 
   return {
-    rewards,
-    claimHistory: state.claimHistory,
-    totalClaimable: Number(totalClaimable.toFixed(2)),
-    claimReward: claim,
-    loading,
-    error,
-    clearError,
+    claimable: 0,
+    totalClaimable: 0,
+    totalClaimed: 0,
+    lastClaim: null,
+    claimReward,
   };
 }
