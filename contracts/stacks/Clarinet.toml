@@ -9,28 +9,28 @@ boot_contracts = []
 
 [contracts.habit-registry]
 path = "contracts/habit-registry.clar"
-clarity_version = 2
-epoch = 2.4
+clarity_version = 4
+epoch = 3.2
 
 [contracts.check-in-manager]
 path = "contracts/check-in-manager.clar"
-clarity_version = 2
-epoch = 2.4
+clarity_version = 4
+epoch = 3.2
 
 [contracts.reward-distributor]
 path = "contracts/reward-distributor.clar"
-clarity_version = 2
-epoch = 2.4
+clarity_version = 4
+epoch = 3.2
 
 [contracts.penalty-handler]
 path = "contracts/penalty-handler.clar"
-clarity_version = 2
-epoch = 2.4
+clarity_version = 4
+epoch = 3.2
 
 [contracts.leaderboard]
 path = "contracts/leaderboard.clar"
-clarity_version = 2
-epoch = 2.4
+clarity_version = 4
+epoch = 3.2
 
 [repl.analysis]
 passes = ["check_checker"]
