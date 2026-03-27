@@ -1,45 +1,52 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
+import { showConnect } from '@stacks/connect';
+import { userSession } from '@/components/wallet/ConnectProvider';
 import { DEFAULT_NETWORK } from '@/lib/constants';
-import {
-  connectDemoWallet,
-  disconnectDemoWallet,
-  getWalletBalance,
-  readDemoState,
-  subscribeToDemoState,
-} from '@/lib/demo-store';
 import { truncateAddress } from '@/lib/utils';
+import { APP_NAME } from '@/lib/constants';
 
 export function useWallet() {
   const [address, setAddress] = useState<string | null>(null);
-  const [balance, setBalance] = useState<number | null>(null);
   const [hydrated, setHydrated] = useState(false);
+  const [balance, setBalance] = useState<number | null>(0);
 
   useEffect(() => {
-    const sync = () => {
-      const state = readDemoState();
-      setAddress(state.walletAddress);
-      setBalance(getWalletBalance(state.walletAddress));
-      setHydrated(true);
-    };
-
-    sync();
-
-    return subscribeToDemoState(sync);
+    if (userSession.isUserSignedIn()) {
+      const userData = userSession.loadUserData();
+      setAddress(
+        DEFAULT_NETWORK === 'mainnet'
+          ? userData.profile.stxAddress.mainnet
+          : userData.profile.stxAddress.testnet
+      );
+    } else if (userSession.isSignInPending()) {
+      userSession.handlePendingSignIn().then((userData) => {
+         setAddress(
+            DEFAULT_NETWORK === 'mainnet'
+              ? userData.profile.stxAddress.mainnet
+              : userData.profile.stxAddress.testnet
+         );
+      });
+    }
+    setHydrated(true);
   }, []);
 
   async function connect() {
-    const nextAddress = connectDemoWallet();
-    setAddress(nextAddress);
-    setBalance(getWalletBalance(nextAddress));
+    showConnect({
+      appDetails: {
+        name: APP_NAME,
+        icon: window.location.origin + '/favicon.svg',
+      },
+      onFinish: () => {
+        window.location.reload();
+      },
+      userSession,
+    });
   }
 
   async function disconnect() {
-    disconnectDemoWallet();
-    setAddress(null);
-    setBalance(null);
+    userSession.signUserOut('/');
   }
 
   return {
