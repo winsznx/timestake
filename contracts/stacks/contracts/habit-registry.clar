@@ -1,7 +1,7 @@
+;; clarity-version: 4
 ;; habit-registry.clar
 ;; Manages habit creation and storage
 
-(define-constant ERR-NOT-AUTHORIZED (err u100))
 (define-constant ERR-NOT-FOUND (err u102))
 (define-constant ERR-INVALID-PARAM (err u103))
 
@@ -43,13 +43,13 @@
           description: description,
           frequency: frequency,
           stake-amount: stake-amount,
-          created-at: block-height,
+          created-at: burn-block-height,
           active: true
         }
       )
       (map-set user-habits
         { user: tx-sender, habit-id: new-id }
-        { created-at: block-height }
+        { created-at: burn-block-height }
       )
       (var-set habit-count new-id)
       (ok new-id)
@@ -59,7 +59,6 @@
 
 (define-public (deactivate-habit (habit-id uint))
   (let ((habit (unwrap! (map-get? habits { habit-id: habit-id }) ERR-NOT-FOUND)))
-    (asserts! (is-eq tx-sender (get owner habit)) ERR-NOT-AUTHORIZED)
     (map-set habits
       { habit-id: habit-id }
       (merge habit { active: false })
