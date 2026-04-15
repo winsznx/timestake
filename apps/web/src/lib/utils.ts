@@ -1,8 +1,6 @@
 import type { Habit } from '@/types';
 
-export function cn(...values: Array<string | false | null | undefined>) {
-  return values.filter(Boolean).join(' ');
-}
+export { cn } from './cn';
 
 export function truncateAddress(address?: string | null, lead = 6, tail = 4) {
   if (!address) {
