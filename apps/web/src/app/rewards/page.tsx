@@ -4,11 +4,27 @@ import { PageShell } from '@/components/layout/PageShell';
 import { RewardCard } from '@/components/rewards/RewardCard';
 import { RewardHistory } from '@/components/rewards/RewardHistory';
 import { Card } from '@/components/ui/Card';
+import { useHabits } from '@/hooks/useHabits';
 import { useRewards } from '@/hooks/useRewards';
-import { formatStx } from '@/lib/utils';
+import { formatStx, getStreakMultiplier } from '@/lib/utils';
+import type { ClaimHistory, Reward } from '@/types';
 
 export default function RewardsPage() {
-  const { rewards, claimHistory, totalClaimable, claimReward } = useRewards();
+  const { activeHabits } = useHabits();
+  const { claimReward } = useRewards();
+
+  const rewards: Reward[] = activeHabits.map((habit) => ({
+    habitId: habit.id,
+    habitName: habit.name,
+    claimable: habit.claimableReward,
+    multiplier: getStreakMultiplier(habit.streak),
+    streak: habit.streak,
+    totalClaimed: habit.totalClaimed,
+    lastClaimAt: habit.lastClaimAt,
+  }));
+
+  const totalClaimable = rewards.reduce((sum, reward) => sum + reward.claimable, 0);
+  const claimHistory: ClaimHistory[] = [];
 
   return (
     <PageShell
@@ -21,7 +37,9 @@ export default function RewardsPage() {
           <p className="text-4xl font-semibold text-text">{formatStx(totalClaimable)}</p>
         </Card>
         <Card title="Reward streams" description="Habits currently attached to a reward balance.">
-          <p className="text-4xl font-semibold text-text">{rewards.filter((reward) => reward.claimable > 0).length}</p>
+          <p className="text-4xl font-semibold text-text">
+            {rewards.filter((reward) => reward.claimable > 0).length}
+          </p>
         </Card>
         <Card title="Claims logged" description="Historical claim events saved in the current session.">
           <p className="text-4xl font-semibold text-text">{claimHistory.length}</p>
@@ -33,7 +51,7 @@ export default function RewardsPage() {
           {rewards.map((reward) => (
             <RewardCard
               key={reward.habitId}
-              onClaim={(habitId) => claimReward(habitId).then(() => undefined)}
+              onClaim={async (habitId) => claimReward(habitId)}
               reward={reward}
             />
           ))}
