@@ -1,9 +1,8 @@
 'use client';
 
-import type { LeaderboardPeriod } from '@/types';
+import type { LeaderboardPeriod, LeaderEntry } from '@/types';
 
-export function useLeaderboard(period: LeaderboardPeriod = 'all-time') {
-  return {
-    entries: [],
-  };
+export function useLeaderboard(_period: LeaderboardPeriod = 'all-time') {
+  const entries: LeaderEntry[] = [];
+  return { entries };
 }
