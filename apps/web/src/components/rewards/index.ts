@@ -1,3 +1,3 @@
-export * from './ClaimButton.tsx';
-export * from './RewardCard.tsx';
-export * from './RewardHistory.tsx';
+export * from './ClaimButton';
+export * from './RewardCard';
+export * from './RewardHistory';

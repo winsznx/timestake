@@ -1,3 +1,3 @@
-export * from './LeaderboardTable.tsx';
-export * from './RankBadge.tsx';
-export * from './UserRow.tsx';
+export * from './LeaderboardTable';
+export * from './RankBadge';
+export * from './UserRow';
