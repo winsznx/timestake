@@ -26,12 +26,12 @@ export function CheckInButton({ habitId }: CheckInButtonProps) {
 
   async function handleCheckIn() {
     try {
-      const habit = await checkIn();
+      await checkIn();
       setToastState({
         open: true,
         tone: 'success',
-        title: 'Check-in locked in',
-        description: `Your streak is now ${habit.streak} day${habit.streak === 1 ? '' : 's'}.`,
+        title: 'Check-in submitted',
+        description: 'Your transaction is broadcasting. Streak will refresh once it mines.',
       });
     } catch (issue) {
       const message = issue instanceof Error ? issue.message : 'Unable to submit check-in.';
