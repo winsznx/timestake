@@ -11,7 +11,8 @@ import { Card } from '@/components/ui/Card';
 import { buttonStyles } from '@/components/ui/Button';
 import { useHabits } from '@/hooks/useHabits';
 import { useRewards } from '@/hooks/useRewards';
-import { formatDate, formatFrequency, formatStx } from '@/lib/utils';
+import { formatDate, formatFrequency, formatStx, getStreakMultiplier } from '@/lib/utils';
+import type { Reward } from '@/types';
 
 export default function HabitDetailPage({
   params,
@@ -19,9 +20,19 @@ export default function HabitDetailPage({
   params: { id: string };
 }) {
   const { getHabit } = useHabits();
-  const { rewards, claimReward } = useRewards();
+  const { claimReward } = useRewards(params.id);
   const habit = getHabit(params.id);
-  const reward = rewards.find((entry) => entry.habitId === params.id);
+  const reward: Reward | null = habit
+    ? {
+        habitId: habit.id,
+        habitName: habit.name,
+        claimable: habit.claimableReward,
+        multiplier: getStreakMultiplier(habit.streak),
+        streak: habit.streak,
+        totalClaimed: habit.totalClaimed,
+        lastClaimAt: habit.lastClaimAt,
+      }
+    : null;
 
   if (!habit) {
     return (
@@ -83,7 +94,7 @@ export default function HabitDetailPage({
       </Card>
 
       {reward ? (
-        <RewardCard reward={reward} onClaim={(habitId) => claimReward(habitId).then(() => undefined)} />
+        <RewardCard reward={reward} onClaim={async () => claimReward()} />
       ) : null}
     </PageShell>
   );
