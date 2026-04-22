@@ -2,6 +2,13 @@ const MAINNET_PREFIX = 'SP';
 const TESTNET_PREFIX = 'ST';
 const BASE32_BODY = /^[0-9A-HJKMNP-TV-Z]+$/;
 
+/**
+ * Validates if a given string is a valid Stacks address format.
+ * Checks for proper prefix (SP/ST), length, and base32 characters.
+ * 
+ * @param value - The string to validate
+ * @returns True if the address format is valid
+ */
 export function isValidStacksAddress(value: string): boolean {
   if (typeof value !== 'string') {
     return false;
@@ -16,7 +23,16 @@ export function isValidStacksAddress(value: string): boolean {
   return BASE32_BODY.test(value.slice(2));
 }
 
-export function getAddressNetwork(address: string): 'mainnet' | 'testnet' | 'unknown' {
+/**
+ * Determines the network type based on the address prefix.
+ * 
+ * @param address - The Stacks address to check
+ * @returns 'mainnet', 'testnet', or 'unknown'
+ */
+export function getAddressNetwork(address: string | null | undefined): 'mainnet' | 'testnet' | 'unknown' {
+  if (!address || typeof address !== 'string') {
+    return 'unknown';
+  }
   if (address.startsWith(MAINNET_PREFIX)) {
     return 'mainnet';
   }
