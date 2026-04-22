@@ -1,10 +1,22 @@
 import type { LeaderboardPeriod } from '@/types';
 
-export const APP_NAME = 'StreakBit';
+/**
+ * Application Identity
+ */
+
+/** The primary name of the application */
+export const APP_NAME = 'TimeStake';
+/** A short tagline describing the application */
 export const APP_TAGLINE = 'Build habits. Earn on-chain.';
+/** A detailed description for SEO and metadata */
 export const APP_DESCRIPTION =
   'Daily habit tracking on Stacks with streak rewards, leaderboard momentum, and wallet-ready UX.';
 
+/**
+ * Navigation and Social Links
+ */
+
+/** Main navigation links for the application */
 export const NAV_LINKS = [
   { href: '/', label: 'Home' },
   { href: '/dashboard', label: 'Dashboard' },
@@ -13,33 +25,51 @@ export const NAV_LINKS = [
   { href: '/rewards', label: 'Rewards' },
 ] as const;
 
+/** Social media and external resource links */
 export const SOCIAL_LINKS = [
   { href: 'https://github.com', label: 'GitHub' },
   { href: 'https://x.com', label: 'X' },
   { href: 'https://docs.stacks.co', label: 'Stacks' },
 ] as const;
 
+/**
+ * Game Mechanics and Stats
+ */
+
+/** Milestones for streak rewards (in days) */
 export const STREAK_MILESTONES = [7, 14, 30] as const;
+
+/** Statistics displayed on the hero section */
 export const HERO_STATS = [
   { label: 'Tracked habits', value: '12.4k' },
   { label: 'Daily check-ins', value: '201k' },
   { label: 'Active streakers', value: '4.8k' },
 ] as const;
 
+/** Available periods for the leaderboard */
 export const LEADERBOARD_PERIODS: { label: string; value: LeaderboardPeriod }[] = [
   { label: '7D', value: '7d' },
   { label: '30D', value: '30d' },
   { label: 'All Time', value: 'all-time' },
 ];
 
+/**
+ * Development and Network Settings
+ */
+
+/** Example addresses used for demo purposes */
 export const DEMO_ADDRESSES = [
   'ST2J8EVYHP1N7Y2D0Q0R4M9A7V2S2W5N1D0R7STREAK',
   'ST38A9Q2K7YB3RF6S6ZX2E1P4J8M0Y1Q0V0N9HABIT',
   'ST1B0G2Y7FM0N1N4D0W9A3S7J4Q6R2K8P5W2FIRE',
 ] as const;
 
+/** The default Stacks network to use (mainnet or testnet) */
 export const DEFAULT_NETWORK = process.env.NEXT_PUBLIC_NETWORK ?? 'mainnet';
+
+/** The default contract address if not provided in environment variables */
 export const DEFAULT_CONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? 'SP31DP8F8CF2GXSZBHHHK5J6Y061744E1TNFGYWYV';
 
+/** Breakpoints used for responsive design testing */
 export const RESPONSIVE_TEST_WIDTHS = [375, 768, 1440] as const;
