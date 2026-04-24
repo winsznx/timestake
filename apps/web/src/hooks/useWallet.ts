@@ -1,37 +1,41 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { showConnect } from '@stacks/connect';
-
 import { userSession } from '@/components/wallet/ConnectProvider';
 import { APP_NAME, DEFAULT_NETWORK } from '@/lib/constants';
 import { truncateAddress } from '@/lib/utils';
 
 const MICROSTX_PER_STX = 1_000_000;
-const apiBase =
-  DEFAULT_NETWORK === 'mainnet' ? 'https://api.hiro.so' : 'https://api.testnet.hiro.so';
+const API_BASE = DEFAULT_NETWORK === 'mainnet' ? 'https://api.hiro.so' : 'https://api.testnet.hiro.so';
 
 interface StxBalanceResponse {
   balance: string;
 }
 
+/**
+ * Utility for fetching STX balance from the Hiro API.
+ */
 async function fetchStxBalance(address: string): Promise<number> {
   try {
-    const res = await fetch(`${apiBase}/extended/v1/address/${address}/stx`);
-    if (!res.ok) {
-      return 0;
-    }
+    const res = await fetch(`${API_BASE}/extended/v1/address/${address}/stx`);
+    if (!res.ok) return 0;
     const json = (await res.json()) as StxBalanceResponse;
     return Number(json.balance) / MICROSTX_PER_STX;
-  } catch {
+  } catch (error) {
+    console.error('Failed to fetch STX balance:', error);
     return 0;
   }
 }
 
+/**
+ * Comprehensive hook for Stacks wallet interactions and state.
+ */
 export function useWallet() {
   const [address, setAddress] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [balance, setBalance] = useState<number | null>(null);
+  const [isConnecting, setIsConnecting] = useState(false);
 
   useEffect(() => {
     if (userSession.isUserSignedIn()) {
@@ -60,38 +64,40 @@ export function useWallet() {
     }
     let active = true;
     fetchStxBalance(address).then((value) => {
-      if (active) {
-        setBalance(value);
-      }
+      if (active) setBalance(value);
     });
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, [address]);
 
-  async function connect() {
+  const connect = useCallback(async () => {
+    setIsConnecting(true);
     showConnect({
       appDetails: {
         name: APP_NAME,
-        icon: window.location.origin + '/favicon.svg',
+        icon: typeof window !== 'undefined' ? `${window.location.origin}/favicon.svg` : '/favicon.svg',
       },
       onFinish: () => {
+        setIsConnecting(false);
         window.location.reload();
       },
+      onCancel: () => setIsConnecting(false),
       userSession,
     });
-  }
+  }, []);
 
-  async function disconnect() {
+  const disconnect = useCallback(async () => {
     userSession.signUserOut('/');
-  }
+  }, []);
+
+  const shortAddress = useMemo(() => truncateAddress(address), [address]);
 
   return {
     address,
-    shortAddress: truncateAddress(address),
+    shortAddress,
     balance,
     network: DEFAULT_NETWORK,
     hydrated,
+    isConnecting,
     isConnected: Boolean(address),
     connect,
     disconnect,
