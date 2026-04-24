@@ -1,29 +1,39 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
-export function useCopyToClipboard(resetDelayMs = 1500) {
-  const [copied, setCopied] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+/**
+ * Hook for copying text to the clipboard with temporary success state.
+ */
+export function useCopyToClipboard(resetTimeout = 2000) {
+  const [copiedText, setCopiedText] = useState<string | null>(null);
 
-  const copy = useCallback(
-    async (value: string) => {
-      setError(null);
-      try {
-        if (!navigator.clipboard) {
-          throw new Error('Clipboard API unavailable');
-        }
-        await navigator.clipboard.writeText(value);
-        setCopied(true);
-        window.setTimeout(() => setCopied(false), resetDelayMs);
-        return true;
-      } catch (issue) {
-        setError(issue instanceof Error ? issue.message : 'Unable to copy');
-        return false;
-      }
-    },
-    [resetDelayMs]
-  );
+  const copy = useCallback(async (text: string) => {
+    if (!navigator?.clipboard) {
+      console.warn('Clipboard not supported');
+      return false;
+    }
 
-  return { copy, copied, error } as const;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedText(text);
+      return true;
+    } catch (error) {
+      console.error('Copy failed', error);
+      setCopiedText(null);
+      return false;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!copiedText) return;
+
+    const timeout = setTimeout(() => {
+      setCopiedText(null);
+    }, resetTimeout);
+
+    return () => clearTimeout(timeout);
+  }, [copiedText, resetTimeout]);
+
+  return { copiedText, copy, isCopied: !!copiedText };
 }
