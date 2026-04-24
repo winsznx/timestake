@@ -1,16 +1,20 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
+/**
+ * Hook to check if the component is still mounted.
+ * Useful for async operations to prevent state updates on unmounted components.
+ */
 export function useIsMounted() {
-  const mounted = useRef(false);
+  const isMounted = useRef(false);
 
   useEffect(() => {
-    mounted.current = true;
+    isMounted.current = true;
     return () => {
-      mounted.current = false;
+      isMounted.current = false;
     };
   }, []);
 
-  return mounted;
+  return useCallback(() => isMounted.current, []);
 }
