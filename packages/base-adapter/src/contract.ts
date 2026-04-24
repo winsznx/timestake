@@ -1,44 +1,38 @@
-import { createPublicClient, http, ContractFunctionExecutionError } from 'viem';
-import { mainnet } from 'viem/chains';
+import { ethers } from 'ethers';
 
+/**
+ * Adapter for interacting with smart contracts on the Base network.
+ */
 export class BaseContractAdapter {
-    private client;
-    private address: `0x${string}`;
-    private abi: any[];
+    private provider: ethers.Provider;
+    private contract: ethers.Contract;
 
-    constructor(address: `0x${string}`, abi: any[]) {
-        if (!abi || abi.length === 0) {
-            throw new Error('Contract ABI is required');
-        }
-        if (address === '0x0000000000000000000000000000000000000000') {
-            throw new Error('Contract address is not configured');
-        }
-        this.address = address;
-        this.abi = abi;
-        this.client = createPublicClient({
-            chain: mainnet,
-            transport: http()
-        });
+    /**
+     * @param address - Contract address
+     * @param abi - Contract ABI
+     * @param provider - Ethers provider
+     */
+    constructor(address: string, abi: any[], provider: ethers.Provider) {
+        this.provider = provider;
+        this.contract = new ethers.Contract(address, abi, provider);
     }
 
-    async retryCall<T>(fn: () => Promise<T>, retries = 3): Promise<T> {
+    /**
+     * Executes a read-only method on the contract.
+     */
+    async read(methodName: string, args: any[] = []) {
         try {
-            return await fn();
+            return await this.contract[methodName](...args);
         } catch (error) {
-            if (retries > 0 && error instanceof ContractFunctionExecutionError) {
-                await new Promise(r => setTimeout(r, 1000));
-                return this.retryCall(fn, retries - 1);
-            }
+            console.error(`Error reading from contract method ${methodName}:`, error);
             throw error;
         }
     }
 
-    async readState(functionName: string, args: any[] = []) {
-        return this.retryCall(() => this.client.readContract({
-            address: this.address,
-            abi: this.abi,
-            functionName,
-            args
-        }));
+    /**
+     * Returns the underlying contract instance.
+     */
+    getContract() {
+        return this.contract;
     }
 }
