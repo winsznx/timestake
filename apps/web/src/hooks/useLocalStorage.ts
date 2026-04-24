@@ -1,34 +1,33 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useState, useCallback } from 'react';
 
-import { safeJsonParse } from '@/lib/safe-json-parse';
-
+/**
+ * Hook for syncing state with localStorage.
+ */
 export function useLocalStorage<T>(key: string, initialValue: T) {
-  const [value, setValue] = useState<T>(initialValue);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
+  const [storedValue, setStoredValue] = useState<T>(() => {
+    if (typeof window === 'undefined') return initialValue;
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      console.error('Error reading localStorage', error);
+      return initialValue;
     }
-    const raw = window.localStorage.getItem(key);
-    if (raw !== null) {
-      setValue(safeJsonParse<T>(raw, initialValue));
+  });
+
+  const setValue = useCallback((value: T | ((val: T) => T)) => {
+    try {
+      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      setStoredValue(valueToStore);
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      }
+    } catch (error) {
+      console.error('Error writing localStorage', error);
     }
-  }, [key, initialValue]);
+  }, [key, storedValue]);
 
-  const update = useCallback(
-    (next: T | ((prev: T) => T)) => {
-      setValue((prev) => {
-        const resolved = typeof next === 'function' ? (next as (prev: T) => T)(prev) : next;
-        if (typeof window !== 'undefined') {
-          window.localStorage.setItem(key, JSON.stringify(resolved));
-        }
-        return resolved;
-      });
-    },
-    [key]
-  );
-
-  return [value, update] as const;
+  return [storedValue, setValue] as const;
 }
