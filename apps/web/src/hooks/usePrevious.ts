@@ -2,12 +2,15 @@
 
 import { useEffect, useRef } from 'react';
 
+/**
+ * Hook that stores the previous value of a state or prop.
+ */
 export function usePrevious<T>(value: T): T | undefined {
-  const previous = useRef<T | undefined>(undefined);
+  const ref = useRef<T>();
 
   useEffect(() => {
-    previous.current = value;
+    ref.current = value;
   }, [value]);
 
-  return previous.current;
+  return ref.current;
 }
