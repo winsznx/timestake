@@ -3,19 +3,32 @@
 import { useEffect, useState } from 'react';
 
 interface WindowSize {
-  width: number;
-  height: number;
+  width: number | undefined;
+  height: number | undefined;
 }
 
+/**
+ * Hook that tracks the browser window dimensions.
+ */
 export function useWindowSize(): WindowSize {
-  const [size, setSize] = useState<WindowSize>({ width: 0, height: 0 });
+  const [windowSize, setWindowSize] = useState<WindowSize>({
+    width: undefined,
+    height: undefined,
+  });
 
   useEffect(() => {
-    const update = () => setSize({ width: window.innerWidth, height: window.innerHeight });
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
+    function handleResize() {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  return size;
+  return windowSize;
 }
