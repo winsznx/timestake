@@ -1,5 +1,5 @@
+import React, { forwardRef } from 'react';
 import type { HTMLAttributes } from 'react';
-
 import { cn } from '@/lib/cn';
 
 type BadgeVariant = 'streak' | 'rank' | 'success' | 'danger' | 'muted';
@@ -8,12 +8,16 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   variant?: BadgeVariant;
 }
 
-export function Badge({
+/**
+ * Badge component for displaying small status or category tags.
+ * Uses forwardRef for integration with tooltips and other UI libraries.
+ */
+export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({
   className,
   variant = 'muted',
   children,
   ...props
-}: BadgeProps) {
+}, ref) => {
   const variants: Record<BadgeVariant, string> = {
     streak: 'bg-secondary/15 text-secondary-light',
     rank: 'bg-accent/15 text-amber-200',
@@ -24,6 +28,7 @@ export function Badge({
 
   return (
     <span
+      ref={ref}
       className={cn(
         'inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]',
         variants[variant],
@@ -34,4 +39,6 @@ export function Badge({
       {children}
     </span>
   );
-}
+});
+
+Badge.displayName = 'Badge';
