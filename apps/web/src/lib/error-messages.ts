@@ -1,3 +1,6 @@
+/**
+ * Standardized error messages for the application.
+ */
 export const ERROR_MESSAGES = {
   WALLET_NOT_CONNECTED: 'Connect your Stacks wallet to continue.',
   WALLET_REJECTED: 'Request was rejected in the wallet.',
@@ -9,3 +12,13 @@ export const ERROR_MESSAGES = {
 } as const;
 
 export type ErrorMessageKey = keyof typeof ERROR_MESSAGES;
+
+/**
+ * Returns a human-readable error message from a key or code.
+ */
+export function getErrorMessage(key: ErrorMessageKey | string): string {
+  if (key in ERROR_MESSAGES) {
+    return ERROR_MESSAGES[key as ErrorMessageKey];
+  }
+  return ERROR_MESSAGES.UNKNOWN;
+}
