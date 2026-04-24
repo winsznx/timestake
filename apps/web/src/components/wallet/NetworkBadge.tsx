@@ -1,10 +1,17 @@
 'use client';
 
 import { Badge } from '@/components/ui/Badge';
-import { useWallet } from '@/hooks/useWallet';
+import { DEFAULT_NETWORK } from '@/lib/constants';
 
+/**
+ * Displays a badge indicating the current active Stacks network.
+ */
 export function NetworkBadge() {
-  const { network } = useWallet();
+  const isMainnet = DEFAULT_NETWORK === 'mainnet';
 
-  return <Badge variant="success">{network}</Badge>;
+  return (
+    <Badge variant={isMainnet ? 'success' : 'streak'}>
+      {isMainnet ? 'Mainnet' : 'Testnet'}
+    </Badge>
+  );
 }
