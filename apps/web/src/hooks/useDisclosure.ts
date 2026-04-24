@@ -1,13 +1,22 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useState, useCallback } from 'react';
 
-export function useDisclosure(initial = false) {
-  const [open, setOpen] = useState(initial);
+/**
+ * Hook for managing open/close states (modals, drawers, etc).
+ */
+export function useDisclosure(initialState = false) {
+  const [isOpen, setIsOpen] = useState(initialState);
 
-  const onOpen = useCallback(() => setOpen(true), []);
-  const onClose = useCallback(() => setOpen(false), []);
-  const onToggle = useCallback(() => setOpen((prev) => !prev), []);
+  const onOpen = useCallback(() => setIsOpen(true), []);
+  const onClose = useCallback(() => setIsOpen(false), []);
+  const onToggle = useCallback(() => setIsOpen(prev => !prev), []);
 
-  return { open, onOpen, onClose, onToggle } as const;
+  return {
+    isOpen,
+    onOpen,
+    onClose,
+    onToggle,
+    setIsOpen,
+  };
 }
