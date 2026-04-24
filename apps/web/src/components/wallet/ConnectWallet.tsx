@@ -1,30 +1,39 @@
 'use client';
 
+import React, { forwardRef } from 'react';
 import { Button } from '@/components/ui/Button';
 import { useWallet } from '@/hooks/useWallet';
+import { truncateAddress } from '@/lib/utils';
 
-export function ConnectWallet() {
-  const { connect, disconnect, hydrated, isConnected, shortAddress } = useWallet();
+/**
+ * Component for triggering wallet connection or displaying connected status.
+ */
+export const ConnectWallet = forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
+  ({ className, ...props }, ref) => {
+    const { address, isConnected, connect, hydrated } = useWallet();
 
-  if (!hydrated) {
+    if (!hydrated) {
+      return (
+        <Button variant="secondary" disabled className={className} {...props}>
+          Checking wallet...
+        </Button>
+      );
+    }
+
+    if (isConnected && address) {
+      return (
+        <Button variant="secondary" className={className} ref={ref} {...props}>
+          {truncateAddress(address)}
+        </Button>
+      );
+    }
+
     return (
-      <Button variant="ghost" size="sm" disabled>
-        Checking wallet...
+      <Button onClick={connect} className={className} ref={ref} {...props}>
+        Connect Wallet
       </Button>
     );
   }
+);
 
-  if (isConnected) {
-    return (
-      <Button variant="ghost" size="sm" onClick={disconnect}>
-        {shortAddress}
-      </Button>
-    );
-  }
-
-  return (
-    <Button variant="primary" size="sm" onClick={connect}>
-      Connect Wallet
-    </Button>
-  );
-}
+ConnectWallet.displayName = 'ConnectWallet';
