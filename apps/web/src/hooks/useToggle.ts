@@ -2,12 +2,15 @@
 
 import { useCallback, useState } from 'react';
 
-export function useToggle(initial = false) {
-  const [value, setValue] = useState(initial);
+/**
+ * Simple hook for toggling a boolean state.
+ */
+export function useToggle(initialValue = false): [boolean, () => void] {
+  const [value, setValue] = useState(initialValue);
 
-  const toggle = useCallback(() => setValue((prev) => !prev), []);
-  const setOn = useCallback(() => setValue(true), []);
-  const setOff = useCallback(() => setValue(false), []);
+  const toggle = useCallback(() => {
+    setValue(prev => !prev);
+  }, []);
 
-  return { value, toggle, setOn, setOff, setValue } as const;
+  return [value, toggle];
 }
