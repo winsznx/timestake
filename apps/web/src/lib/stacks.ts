@@ -1,17 +1,23 @@
-import { DEFAULT_CONTRACT_ADDRESS, DEFAULT_NETWORK } from './constants';
+import { STACKS_MAINNET, STACKS_TESTNET } from '@stacks/network';
+import { DEFAULT_NETWORK } from './constants';
 
-const isMainnet = DEFAULT_NETWORK === 'mainnet';
+/**
+ * Returns the current active Stacks network instance.
+ */
+export function getNetwork() {
+  return DEFAULT_NETWORK === 'mainnet' ? STACKS_MAINNET : STACKS_TESTNET;
+}
 
-export const stacksNetwork = {
-  name: isMainnet ? 'Stacks Mainnet' : 'Stacks Testnet',
-  slug: DEFAULT_NETWORK,
-  contractAddress: DEFAULT_CONTRACT_ADDRESS,
-  coreApiBaseUrl: isMainnet ? 'https://api.hiro.so' : 'https://api.testnet.hiro.so',
-  explorerBaseUrl: isMainnet
-    ? 'https://explorer.hiro.so'
-    : 'https://explorer.hiro.so/?chain=testnet',
-};
+/**
+ * Converts micro-STX to STX.
+ */
+export function microStxToStx(amount: number | bigint): number {
+  return Number(amount) / 1_000_000;
+}
 
-export function getExplorerUrl(path = '') {
-  return `${stacksNetwork.explorerBaseUrl}${path}`;
+/**
+ * Converts STX to micro-STX.
+ */
+export function stxToMicroStx(amount: number): bigint {
+  return BigInt(Math.floor(amount * 1_000_000));
 }
