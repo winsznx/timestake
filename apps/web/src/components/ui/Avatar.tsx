@@ -1,40 +1,31 @@
+import React from 'react';
 import { cn } from '@/lib/cn';
 
-type AvatarSize = 'sm' | 'md' | 'lg';
-
-interface AvatarProps {
-  name: string;
+interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   src?: string | null;
-  size?: AvatarSize;
-  className?: string;
+  alt?: string;
+  fallback?: string;
 }
 
-const sizeStyles: Record<AvatarSize, string> = {
-  sm: 'h-8 w-8 text-xs',
-  md: 'h-10 w-10 text-sm',
-  lg: 'h-14 w-14 text-base',
-};
-
-function initials(name: string) {
-  const parts = name.trim().split(/\s+/).slice(0, 2);
-  return parts.map((part) => part.charAt(0).toUpperCase()).join('') || '?';
-}
-
-export function Avatar({ name, src, size = 'md', className }: AvatarProps) {
+/**
+ * Avatar component with fallback support.
+ */
+export function Avatar({ src, alt, fallback, className, ...props }: AvatarProps) {
   return (
-    <span
+    <div
       className={cn(
-        'inline-flex items-center justify-center overflow-hidden rounded-full bg-white/10 font-semibold text-text',
-        sizeStyles[size],
+        'relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border border-white/10 bg-zinc-800',
         className
       )}
+      {...props}
     >
       {src ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={src} alt={name} className="h-full w-full object-cover" />
+        <img src={src} alt={alt} className="aspect-square h-full w-full object-cover" />
       ) : (
-        initials(name)
+        <div className="flex h-full w-full items-center justify-center text-xs font-medium text-muted">
+          {fallback || alt?.slice(0, 2).toUpperCase()}
+        </div>
       )}
-    </span>
+    </div>
   );
 }
