@@ -1,39 +1,27 @@
-'use client';
-
-import { useState } from 'react';
-import type { ReactNode } from 'react';
-
+import React from 'react';
 import { cn } from '@/lib/cn';
 
-interface TooltipProps {
-  label: string;
-  children: ReactNode;
-  className?: string;
+interface TooltipProps extends React.HTMLAttributes<HTMLDivElement> {
+  content: string;
+  children: React.ReactNode;
 }
 
-export function Tooltip({ label, children, className }: TooltipProps) {
-  const [visible, setVisible] = useState(false);
-
+/**
+ * Basic Tooltip wrapper.
+ */
+export function Tooltip({ content, children, className, ...props }: TooltipProps) {
   return (
-    <span
-      className="relative inline-flex"
-      onMouseEnter={() => setVisible(true)}
-      onMouseLeave={() => setVisible(false)}
-      onFocus={() => setVisible(true)}
-      onBlur={() => setVisible(false)}
-    >
+    <div className="group relative inline-block">
       {children}
-      {visible ? (
-        <span
-          role="tooltip"
-          className={cn(
-            'pointer-events-none absolute left-1/2 top-full z-10 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-950 px-2 py-1 text-xs text-text shadow-lg',
-            className
-          )}
-        >
-          {label}
-        </span>
-      ) : null}
-    </span>
+      <div
+        className={cn(
+          'invisible absolute bottom-full left-1/2 mb-2 w-max -translate-x-1/2 rounded bg-zinc-900 px-2 py-1 text-xs text-white opacity-0 transition-all group-hover:visible group-hover:opacity-100',
+          className
+        )}
+        {...props}
+      >
+        {content}
+      </div>
+    </div>
   );
 }
