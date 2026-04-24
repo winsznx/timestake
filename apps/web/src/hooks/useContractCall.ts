@@ -1,35 +1,46 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
-export function useContractCall() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+interface ContractCallState<T> {
+  data: T | null;
+  loading: boolean;
+  error: string | null;
+}
 
-  async function execute<T>(action: () => Promise<T> | T) {
-    setLoading(true);
-    setError(null);
+/**
+ * Hook for managing smart contract call states.
+ * Provides typed execution and stable callback references.
+ */
+export function useContractCall<T = any>() {
+  const [state, setState] = useState<ContractCallState<T>>({
+    data: null,
+    loading: false,
+    error: null,
+  });
+
+  const execute = useCallback(async (action: () => Promise<T> | T): Promise<T | undefined> => {
+    setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      return await action();
+      const result = await action();
+      setState(prev => ({ ...prev, data: result, loading: false }));
+      return result;
     } catch (issue) {
       const message =
         issue instanceof Error ? issue.message : 'Something went wrong while calling the contract.';
-      setError(message);
+      setState(prev => ({ ...prev, error: message, loading: false }));
       throw issue;
-    } finally {
-      setLoading(false);
     }
-  }
+  }, []);
 
-  function clearError() {
-    setError(null);
-  }
+  const clearError = useCallback(() => {
+    setState(prev => ({ ...prev, error: null }));
+  }, []);
 
   return {
+    ...state,
     execute,
-    loading,
-    error,
     clearError,
   };
 }
