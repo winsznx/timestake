@@ -1,16 +1,19 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 
-export function useScrollLock(locked: boolean): void {
-  useEffect(() => {
-    if (!locked) {
-      return undefined;
-    }
-    const original = document.body.style.overflow;
+/**
+ * Hook to lock body scroll, typically used for modals.
+ */
+export function useScrollLock(lock: boolean) {
+  useLayoutEffect(() => {
+    if (!lock) return;
+
+    const originalStyle = window.getComputedStyle(document.body).overflow;
     document.body.style.overflow = 'hidden';
+
     return () => {
-      document.body.style.overflow = original;
+      document.body.style.overflow = originalStyle;
     };
-  }, [locked]);
+  }, [lock]);
 }
