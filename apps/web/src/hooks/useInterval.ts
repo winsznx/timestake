@@ -2,18 +2,20 @@
 
 import { useEffect, useRef } from 'react';
 
-export function useInterval(callback: () => void, delayMs: number | null): void {
-  const stored = useRef(callback);
+/**
+ * Declarative version of setInterval that works with React lifecycles.
+ */
+export function useInterval(callback: () => void, delay: number | null) {
+  const savedCallback = useRef(callback);
 
   useEffect(() => {
-    stored.current = callback;
+    savedCallback.current = callback;
   }, [callback]);
 
   useEffect(() => {
-    if (delayMs === null) {
-      return undefined;
+    if (delay !== null) {
+      const id = setInterval(() => savedCallback.current(), delay);
+      return () => clearInterval(id);
     }
-    const handle = window.setInterval(() => stored.current(), delayMs);
-    return () => window.clearInterval(handle);
-  }, [delayMs]);
+  }, [delay]);
 }
