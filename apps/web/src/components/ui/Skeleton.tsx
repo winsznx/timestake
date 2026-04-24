@@ -1,16 +1,24 @@
+import React from 'react';
 import { cn } from '@/lib/cn';
 
-interface SkeletonProps {
-  className?: string;
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: 'rectangular' | 'circular' | 'text';
 }
 
-export function Skeleton({ className }: SkeletonProps) {
+/**
+ * Skeleton component for showing loading states.
+ */
+export function Skeleton({ className, variant = 'rectangular', ...props }: SkeletonProps) {
   return (
     <div
       className={cn(
-        'animate-shimmer rounded-2xl bg-[linear-gradient(110deg,rgba(255,255,255,0.05),rgba(255,255,255,0.14),rgba(255,255,255,0.05))] bg-[length:200%_100%]',
+        'animate-pulse bg-white/5',
+        variant === 'circular' && 'rounded-full',
+        variant === 'text' && 'h-4 w-full rounded',
+        variant === 'rectangular' && 'rounded-md',
         className
       )}
+      {...props}
     />
   );
 }
