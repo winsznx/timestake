@@ -2,16 +2,23 @@
 
 import { useEffect, useState } from 'react';
 
+/**
+ * Hook that tracks the state of a CSS media query.
+ */
 export function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false);
 
   useEffect(() => {
-    const mql = window.matchMedia(query);
-    setMatches(mql.matches);
-    const listener = (event: MediaQueryListEvent) => setMatches(event.matches);
-    mql.addEventListener('change', listener);
-    return () => mql.removeEventListener('change', listener);
-  }, [query]);
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+
+    const listener = () => setMatches(media.matches);
+    media.addEventListener('change', listener);
+
+    return () => media.removeEventListener('change', listener);
+  }, [matches, query]);
 
   return matches;
 }
