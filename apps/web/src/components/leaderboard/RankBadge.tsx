@@ -1,21 +1,15 @@
+import React from 'react';
 import { Badge } from '@/components/ui/Badge';
 
-interface RankBadgeProps {
-  rank: number;
-}
-
-export function RankBadge({ rank }: RankBadgeProps) {
-  if (rank === 1) {
-    return <Badge variant="rank">Rank 1</Badge>;
-  }
-
-  if (rank === 2) {
-    return <Badge variant="success">Rank 2</Badge>;
-  }
-
-  if (rank === 3) {
-    return <Badge variant="muted">Rank 3</Badge>;
-  }
-
-  return <Badge variant="muted">Rank {rank}</Badge>;
+export function RankBadge({ rank }: { rank: number }) {
+    let variant: any = 'muted';
+    if (rank === 1) variant = 'success';
+    if (rank === 2) variant = 'streak';
+    if (rank === 3) variant = 'rank';
+    
+    return (
+        <Badge variant={variant} aria-label={`Rank ${rank}`}>
+            #{rank}
+        </Badge>
+    );
 }
