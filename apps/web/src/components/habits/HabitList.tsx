@@ -1,35 +1,34 @@
-import { Card } from '@/components/ui/Card';
-import { HabitCard } from '@/components/habits/HabitCard';
-import type { Habit } from '@/types';
+import React from 'react';
+import { HabitCard } from './HabitCard';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 interface HabitListProps {
-  habits: Habit[];
-  emptyTitle: string;
-  emptyDescription: string;
-  showCheckIn?: boolean;
+    habits: any[];
+    isLoading: boolean;
 }
 
-export function HabitList({
-  habits,
-  emptyTitle,
-  emptyDescription,
-  showCheckIn = false,
-}: HabitListProps) {
-  if (habits.length === 0) {
-    return (
-      <Card title={emptyTitle} description={emptyDescription}>
-        <p className="text-sm text-muted">
-          Start with one habit that feels easy to repeat tomorrow.
-        </p>
-      </Card>
-    );
-  }
+export function HabitList({ habits, isLoading }: HabitListProps) {
+    if (isLoading) {
+        return (
+            <div className="space-y-4" aria-busy="true">
+                <Skeleton className="h-24 w-full" />
+                <Skeleton className="h-24 w-full" />
+                <Skeleton className="h-24 w-full" />
+            </div>
+        );
+    }
 
-  return (
-    <div className="grid gap-4 xl:grid-cols-2">
-      {habits.map((habit) => (
-        <HabitCard habit={habit} key={habit.id} showCheckIn={showCheckIn} />
-      ))}
-    </div>
-  );
+    if (!habits?.length) {
+        return <div className="text-center text-zinc-500 py-8" role="status">No habits found. Start your journey today!</div>;
+    }
+
+    return (
+        <div className="space-y-4" role="list">
+            {habits.map((habit, i) => (
+                <div key={i} role="listitem">
+                    <HabitCard title={habit.name} description={habit.description} streak={habit.streak} />
+                </div>
+            ))}
+        </div>
+    );
 }
