@@ -1,5 +1,7 @@
-const TX_ID = /^0x[0-9a-fA-F]{64}$/;
-
-export function isValidTxId(value: string): boolean {
-  return typeof value === 'string' && TX_ID.test(value);
+/**
+ * Validates a Stacks transaction ID.
+ * @param txId - The transaction ID string to validate
+ */
+export function isValidTxId(txId: string): boolean {
+  return typeof txId === 'string' && /^0x[a-fA-F0-9]{64}$/.test(txId);
 }
