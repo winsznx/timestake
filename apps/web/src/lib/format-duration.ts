@@ -1,17 +1,19 @@
-const MINUTE = 60;
-const HOUR = 60 * MINUTE;
-const DAY = 24 * HOUR;
+/**
+ * Formats a duration in milliseconds to a human-readable string.
+ * @param ms - Duration in milliseconds
+ */
+export function formatDuration(ms: number): string {
+  if (ms < 0) return '0s';
+  const seconds = Math.floor((ms / 1000) % 60);
+  const minutes = Math.floor((ms / (1000 * 60)) % 60);
+  const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
+  const days = Math.floor(ms / (1000 * 60 * 60 * 24));
 
-export function formatDuration(seconds: number): string {
-  const total = Math.max(0, Math.floor(seconds));
-  if (total < MINUTE) {
-    return `${total}s`;
-  }
-  if (total < HOUR) {
-    return `${Math.round(total / MINUTE)}m`;
-  }
-  if (total < DAY) {
-    return `${Math.round(total / HOUR)}h`;
-  }
-  return `${Math.round(total / DAY)}d`;
+  const parts = [];
+  if (days > 0) parts.push(`${days}d`);
+  if (hours > 0) parts.push(`${hours}h`);
+  if (minutes > 0) parts.push(`${minutes}m`);
+  if (seconds > 0 || parts.length === 0) parts.push(`${seconds}s`);
+
+  return parts.join(' ');
 }
