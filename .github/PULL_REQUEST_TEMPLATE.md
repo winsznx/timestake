@@ -1,17 +1,6 @@
-## Summary
+## Description
 
-<!-- Describe the motivation and scope of the change. -->
+Closes #
 
-## Changes
-
-- [ ] Item one
-- [ ] Item two
-
-## Testing
-
-<!-- Commands you ran, manual verifications, screenshots. -->
-
-## Risk
-
-- [ ] Safe to roll forward
-- [ ] Requires follow-up
+## Changes Made
+- 
