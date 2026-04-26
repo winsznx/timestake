@@ -1,13 +1,15 @@
+/**
+ * Omits specified keys from an object.
+ * @param obj - The source object
+ * @param keys - Array of keys to omit
+ */
 export function omit<T extends object, K extends keyof T>(
-  source: T,
-  keys: readonly K[]
+  obj: T,
+  keys: K[]
 ): Omit<T, K> {
-  const blocked = new Set<keyof T>(keys);
-  const result = {} as Omit<T, K>;
-  for (const key of Object.keys(source) as Array<keyof T>) {
-    if (!blocked.has(key)) {
-      (result as Record<keyof T, unknown>)[key] = source[key];
-    }
+  const result = { ...obj };
+  for (const key of keys) {
+    delete result[key];
   }
   return result;
 }
