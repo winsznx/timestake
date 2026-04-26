@@ -1,38 +1,19 @@
-import { Card } from '@/components/ui/Card';
-import { formatDate, formatStx } from '@/lib/utils';
-import type { ClaimHistory } from '@/types';
+import React from 'react';
 
-interface RewardHistoryProps {
-  history: ClaimHistory[];
-}
-
-export function RewardHistory({ history }: RewardHistoryProps) {
-  return (
-    <Card title="Reward history" description="Every successful claim is listed here.">
-      {history.length === 0 ? (
-        <p className="text-sm text-muted">Claim a reward to start building your history.</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
-            <thead className="text-muted">
-              <tr>
-                <th className="pb-3 pr-6 font-medium">Habit</th>
-                <th className="pb-3 pr-6 font-medium">Amount</th>
-                <th className="pb-3 font-medium">Claimed</th>
-              </tr>
-            </thead>
-            <tbody>
-              {history.map((entry) => (
-                <tr className="border-t border-border/40" key={entry.id}>
-                  <td className="py-4 pr-6 text-text">{entry.habitName}</td>
-                  <td className="py-4 pr-6 text-text">{formatStx(entry.amount)}</td>
-                  <td className="py-4 text-muted">{formatDate(entry.claimedAt)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+export function RewardHistory({ history }: { history: any[] }) {
+    if (!history?.length) {
+        return <div className="text-sm text-zinc-500 p-4 text-center">No claim history available.</div>;
+    }
+    
+    return (
+        <div className="space-y-2">
+            <h4 className="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-3">Claim History</h4>
+            {history.map((item, i) => (
+                <div key={i} className="flex justify-between items-center p-3 rounded-lg bg-zinc-900/50 border border-white/5">
+                    <span className="text-sm text-zinc-300">{new Date(item.date).toLocaleDateString()}</span>
+                    <span className="font-mono text-green-400">+{item.amount} STX</span>
+                </div>
+            ))}
         </div>
-      )}
-    </Card>
-  );
+    );
 }
